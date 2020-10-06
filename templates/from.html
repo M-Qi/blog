@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ page_title }}
+{% endblock %}
+
+{% block content %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-4 col-xs-offset-4">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">{{ form_title }}</h3>
+                      </div>
+                      <div class="panel-body">
+                            {% for field in form %}
+                                {% if not form.is_hedden %}
+                                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                    {{ field}}
+                                {% endif %}
+
+                                <p class="text-danger">
+                                    {{ field.errors.as_text }}
+                                </p>
+                            {% endfor %}
+                                <span id="tip" class="text-danger pull-left">
+                                    {{ login_form.non_field_errors }}
+                                </span>
+                            <div class="clearfix"></div>
+                            <div class="pull-left">
+                                {% block left_btn %}
+
+                                {% endblock %}
+                            </div>
+                            <div class="pull-right">
+                                <input type="submit" value="{{ sub_text }}" class="btn btn-primary">
+                                <input class="btn btn-default" type="button" value="返回" onclick="window.location.href='{{ full_path }}'">
+                            </div>
+                      </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </form>
+{% endblock %}

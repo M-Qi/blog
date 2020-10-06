@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+首页
+{% endblock %}
+{% block base_title %}
+    <link rel="stylesheet" href="{% static '/css/home.css' %}">
+    <script src="http://cdn.highcharts.com.cn/highcharts/highcharts.js"></script>
+
+{% endblock %}
+{% block home_active %}
+active
+{% endblock %}
+{% block content %}
+<h1>欢迎来到我的博客!开发中...</h1>
+
+        <!-- 图表容器 DOM -->
+    <div id="container"></div>
+    <h3>今日热门博客</h3>
+    <ul>
+        {% for todays in today_hot %}
+            <li><a href="{% url 'blog:detail' todays.content_object.id %}">{{ todays.content_object.title }}</a>({{ todays.read_num }})</li>
+        {% empty %}
+            <li>今天没有热门博客</li>
+        {% endfor %}
+
+    </ul>
+    <h3>昨天热门博客</h3>
+    <ul>
+        {% for yester in yesterday_hot %}
+            <li><a href="{% url 'blog:detail' yester.content_object.id %}">{{ yester.content_object.title }}</a>({{ yester.read_num }})</li>
+        {% empty %}
+            <li>昨天没有热门博客</li>
+        {% endfor %}
+    </ul>
+    <h3>本周热门博客</h3>
+    <ul>
+        {% for week in week_hot %}
+            <li><a href="{% url 'blog:detail' week.id %}">{{ week.title }}</a>({{ week.read_nums }})</li>
+        {% endfor %}
+
+    </ul>
+    <!-- 引入 highcharts.js -->
+    <script src="http://cdn.highcharts.com.cn/highcharts/highcharts.js"></script>
+    <script>
+        // 图表配置
+        var options = {
+            chart: {
+                type: 'line'                          //指定图表的类型，默认是折线图（line）
+            },
+            title: {
+                text: null               // 标题
+            },
+            xAxis: {
+                title: { text:'前7日阅读统计' },
+                categories: {{ time|safe }},  // x 轴分类
+                {#tickmarkPlacement:'on'#}
+            },
+            yAxis: {
+                title: { text: null },                // y 轴标题
+                labels:{ enabled:false },      //y轴1.2.3.4.5
+
+            },
+            series: [{                              // 数据列
+                name: '阅读量',                        // 数据列名
+                data: {{ count }}                     // 数据
+            }],
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            legend: { enabled: false },         //版权信息隐藏
+            credits:{ enabled: false}       //图例隐藏
+
+        };
+        // 图表初始化函数
+        var chart = Highcharts.chart('container', options);
+    </script>
+{% endblock %}
+
+

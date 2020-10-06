@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}
+登录页面
+{% endblock %}
+
+{% block content %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-4 col-xs-offset-4">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">登录</h3>
+                      </div>
+                      <div class="panel-body">
+                        {% if not user.is_authenticated %}
+                            {% for field in login_form %}
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field}}
+                                <p class="text-danger">
+                                    {{ field.errors.as_text }}
+                                </p>
+                            {% endfor %}
+                                <span class="text-danger pull-left">
+                                    {{ login_form.non_field_errors }}
+                                </span>
+                            <div class="clearfix"></div>
+                            <div class="pull-left">
+                                <a href="{% url 'user:forget_password' %}">忘记密码</a>
+                            </div>
+                            <input type="submit" value="登录" class="btn btn-primary pull-right">
+                        {% else %}
+                            <script type="text/javascript">
+                                window.location.href='/'
+                            </script>
+                        {% endif %}
+                      </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </form>
+{% endblock %}
